@@ -19,6 +19,8 @@ function pruebas(req,res){
 }
 
 function saveUser(req,res){
+	console.log('aqui en el back');
+	
 	//Crear objeto usuario
 	var user = new User();
 
@@ -68,25 +70,30 @@ function saveUser(req,res){
 }
 
 function login (req,res){
-
+	
 	var params = req.body;
 	var email = params.email;
 	var password = params.password;
 
 	User.findOne({ email : email.toLowerCase()}, (err, user) =>{
-		if (err) {
+		if (err) {			
 			res.status(500).send({ message : 'Error al comprobar el usuario'});
 		}else{
+			
 			if(user){
+				
 				bcrypt.compare(password, user.password,(err,check) =>{
 					if(check){
+	
 						if(params.gettoken){
-							//devolcer el token
+							//devolver el token
 							res.status(200).send({
 								token : jwt.createToken(user)
 							});
 						}else{
-
+							res.status(200).send({
+								user : user
+							});
 						}
 		
 					}else{
@@ -97,6 +104,7 @@ function login (req,res){
 				});
 				
 			}else{
+				console.log(8);
 				res.status(404).send({
 					message : 'El usuario no ha podido logearse'
 				});
@@ -111,6 +119,7 @@ function updateUser(req, res){
 
 	var userID = req.params.id;
 	var update = req.body;
+	delete update.password;
 
 	console.log(update);
 	if(userID != req.user.sub){
@@ -210,7 +219,7 @@ function getKeepers(req,res){
 			if(!users){
 				res.status(404).send({ message : 'No hay cuidadores'});
 			}else{
-				res.status(200).send({users});
+				res.status(200).send({keepers :users});
 			}
 		}
 	});

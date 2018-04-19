@@ -93,7 +93,7 @@ function updateAnimal(req,res){
 			if(!animalUpdate){
 				res.status(404).send({message : 'No se ha actualizado el animal'});
 			}else{
-				res.status(200).send({animalUpdate});
+				res.status(200).send({animal : animalUpdate});
 			}
 		}
 	});
